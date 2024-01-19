@@ -1,0 +1,2 @@
+ALTER TABLE respostas_questoes
+rename COLUMN respostaDeFormulario_id to formularioRespondido_id;

@@ -22,8 +22,11 @@ public class Questao {
     private Long id;
     private String pergunta;
 
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Alternativa> alternativas;
+
+    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<RespostaQuestao> respostasQuestoes;
 
     @ManyToOne
     private  Formulario formulario;

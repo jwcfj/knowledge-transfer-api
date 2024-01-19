@@ -31,12 +31,12 @@ public class Formulario {
     */
 
     @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Resposta_de_Formulario> respostas;
+    private List<FormularioRespondido> formulariosRespondidos;
 
     @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Questao> questionario;
 
-    public Formulario(FormularioDTO dados){
+    /*public Formulario(FormularioDTO dados){
         this.nome= dados.nome();
         questionario = new ArrayList<>();
         for(int i=0;i<dados.perguntas().size();i++){
@@ -48,5 +48,5 @@ public class Formulario {
         //this.setAlternativas(dados.alternativas());
         //this.setPerguntas(dados.perguntas());
         //this.setProcessos_alternativas(dados.processos_alternativas());
-    }
+    }*/
 }

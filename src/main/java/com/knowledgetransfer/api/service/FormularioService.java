@@ -5,9 +5,11 @@ import com.knowledgetransfer.api.DTO.FormularioDTO;
 import com.knowledgetransfer.api.DTO.ListagemFormularioDTO;
 import com.knowledgetransfer.api.model.Alternativa;
 import com.knowledgetransfer.api.model.Formulario;
+import com.knowledgetransfer.api.model.Processo;
 import com.knowledgetransfer.api.model.Questao;
 import com.knowledgetransfer.api.repository.AlternativaRepository;
 import com.knowledgetransfer.api.repository.FormularioRepository;
+import com.knowledgetransfer.api.repository.ProcessoRepository;
 import com.knowledgetransfer.api.repository.QuestaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,9 @@ public class FormularioService {
     @Autowired
     private AlternativaRepository alternativaRepository;
 
+    @Autowired
+    private ProcessoRepository processoRepository;
+
     public String atualizar(AtualizacaoFormularioDTO dados) {
         Formulario formulario = formularioRepository.getReferenceById(dados.id());
     if(dados.nome()!=null) formulario.setNome(dados.nome());
@@ -38,7 +43,7 @@ public class FormularioService {
             formulario.getQuestionario().get(i).setPergunta(dados.perguntas().get(i));
             for(int j = 0;j<formulario.getQuestionario().get(i).getAlternativas().size();j++) {
                 formulario.getQuestionario().get(i).getAlternativas().get(j).setAlternativa(dados.alternativas().get(i).get(j));
-                formulario.getQuestionario().get(i).getAlternativas().get(j).setProcesso(dados.processos_alternativas().get(i).get(j));
+                formulario.getQuestionario().get(i).getAlternativas().get(j).setProcesso(processoRepository.getReferenceById(dados.processos_id().get(i).get(j)));
             }
         }
         if(formulario.getQuestionario().size() < dados.perguntas().size()){
@@ -49,7 +54,7 @@ public class FormularioService {
                 for(int j = 0; j < dados.alternativas().size();j++){
                     Alternativa alternativa = new Alternativa();
                     alternativa.setAlternativa(dados.alternativas().get(i).get(j));
-                    alternativa.setProcesso(dados.processos_alternativas().get(i).get(j));
+                    alternativa.setProcesso(processoRepository.getReferenceById(dados.processos_id().get(i).get(j)));
                     questao.getAlternativas().add(alternativa);
                 }
 
@@ -82,7 +87,8 @@ public class FormularioService {
             for(int j=0; j<formularioDados.alternativas().size();j++){
                 Alternativa alternativa = new Alternativa();
                 alternativa.setAlternativa(formularioDados.alternativas().get(i).get(j));
-                alternativa.setProcesso(formularioDados.processos_alternativas().get(i).get(j));
+                Processo processo = processoRepository.getReferenceById(formularioDados.processos_id().get(i).get(j));
+                alternativa.setProcesso(  processo);
                 alternativa.setQuestao(questao);
                 questao.getAlternativas().add(alternativa);
             }
@@ -104,7 +110,7 @@ public class FormularioService {
         return "okay";
     }
 
-    private List<Questao> generateQuestaoList(List<String> perguntas, List<List<String>> alternativas, List<List<String>> processos_alternativas, Formulario formulario){
+    /*private List<Questao> generateQuestaoList(List<String> perguntas, List<List<String>> alternativas, List<List<String>> processos_alternativas, Formulario formulario){
             List<Questao> questionario = new ArrayList<>();
             for(int i=0, max = perguntas.size();i<max;i++) {
                 Questao novaQuestao = new Questao();
@@ -128,7 +134,7 @@ public class FormularioService {
         }
         return alternativasReturn;
 
-    }
+    }*/
 
     public Formulario encontrarFormulario(String nome){
         Formulario formulario = formularioRepository.findByNome(nome);
@@ -139,11 +145,10 @@ public class FormularioService {
     }
 
     public Page<ListagemFormularioDTO> listar(Pageable paginacao){
-        //retornar como list
-        //return repository.findAll(paginacao).stream().map(ListagemFormularioDTO::new).toList();
         return formularioRepository.findAll(paginacao).map(ListagemFormularioDTO::new);
 
     }
+
 
 
 

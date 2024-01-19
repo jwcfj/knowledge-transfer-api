@@ -4,6 +4,8 @@ import com.knowledgetransfer.api.DTO.AlternativaDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Table(name ="alternativas")
@@ -17,16 +19,22 @@ public class Alternativa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String alternativa;
-    private String processo;
+
+    //private String processo;
 
     @ManyToOne
     private  Questao questao;
 
+    @ManyToOne
+    private Processo processo;
+
+    @OneToMany(mappedBy = "alternativa", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<RespostaQuestao> respostasQuestoes;
+
     public Alternativa(AlternativaDTO dados) {
         this.setAlternativa(dados.alternativa());
-        this.setProcesso(dados.processo());
+        //this.setProcesso(dados.processo());
     }
 
 }

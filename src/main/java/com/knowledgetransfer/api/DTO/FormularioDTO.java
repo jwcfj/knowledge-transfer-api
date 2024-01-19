@@ -12,5 +12,5 @@ public record FormularioDTO(
         @NotNull
         List<List<String>> alternativas,
         @NotNull
-        List<List<String>> processos_alternativas) {
+        List<List<Long>> processos_id) {
 }

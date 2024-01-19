@@ -18,7 +18,7 @@ public class Stakeholder extends Usuario{
     private String cargo;
 
     @OneToMany(mappedBy = "stakeholder", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Resposta_de_Formulario> repostas_de_formulario;
+    private List<FormularioRespondido> formulariosRespondidos;
 
     public Stakeholder(StakeholderDTO dados) {
         this.setFiliacao(dados.filiacao());

@@ -11,4 +11,4 @@ public record AtualizacaoFormularioDTO(
         String nome,
         List<String> perguntas,
         List<List<String>> alternativas,
-        List<List<String>> processos_alternativas){}
+        List<List<Long>> processos_id){}

@@ -4,6 +4,7 @@ import com.knowledgetransfer.api.DTO.AtualizacaoProcessoDTO;
 import com.knowledgetransfer.api.DTO.ListagemProcessoDTO;
 import com.knowledgetransfer.api.DTO.ListagemStakeholderDTO;
 import com.knowledgetransfer.api.DTO.ProcessoDTO;
+import com.knowledgetransfer.api.model.Processo;
 import com.knowledgetransfer.api.service.ProcessoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,10 @@ public class ProcessoController {
         processoService.deletar(id);
     }
 
+    @PostMapping("/{id}")
+    public void encontrarProcesso(@PathVariable Long id){
+
+        processoService.encontrarProcesso(id);
+    }
 
 }

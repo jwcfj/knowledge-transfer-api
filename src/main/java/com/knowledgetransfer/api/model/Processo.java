@@ -15,15 +15,20 @@ import java.util.List;
 @Table(name = "processos")
 @EqualsAndHashCode(of = "id")
 public class Processo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private String descricao;
 
+
     @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Resposta_de_Formulario> respostas;
-    //private List<String> propriedade;
+    private List<FormularioRespondido> formulariosRespondidos;
+
+    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Alternativa> alternativas;
 
     public Processo(ProcessoDTO dados){
         this.setNome(dados.nome());
@@ -33,7 +38,5 @@ public class Processo {
     //@Embedded
     //private Etapa etapa;
 
-    /*@ManyToMany(mappedBy = "processos", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Resposta_de_Formulario> respostaDeFormulario;*/
 
 }

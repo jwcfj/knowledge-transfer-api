@@ -6,14 +6,14 @@ import lombok.*;
 import java.sql.Timestamp;
 import java.util.List;
 @Entity
-@Table(name = "respostas")
+@Table(name = "formularios_respondidos")//TROCAR O NOME DA TABELA
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
-public class Resposta_de_Formulario {
+public class FormularioRespondido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,8 @@ public class Resposta_de_Formulario {
 
     //private List<String> propriedades;
 
+    @OneToMany(mappedBy = "formulario_respondido", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<RespostaQuestao> respostasQuestoes;
     @ManyToOne
     private Stakeholder stakeholder;
     @ManyToOne
