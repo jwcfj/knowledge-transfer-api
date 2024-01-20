@@ -35,37 +35,38 @@ public class FormularioService {
     private ProcessoRepository processoRepository;
 
     public String atualizar(AtualizacaoFormularioDTO dados) {
+
+    //versao genial
+    if(dados.nome()!=null){
         Formulario formulario = formularioRepository.getReferenceById(dados.id());
-    if(dados.nome()!=null) formulario.setNome(dados.nome());
-    if(dados.perguntas()!=null) {
-        List<Questao> questionario = new ArrayList<>();
-        for(int i = 0;i<formulario.getQuestionario().size();i++){
-            formulario.getQuestionario().get(i).setPergunta(dados.perguntas().get(i));
-            for(int j = 0;j<formulario.getQuestionario().get(i).getAlternativas().size();j++) {
-                formulario.getQuestionario().get(i).getAlternativas().get(j).setAlternativa(dados.alternativas().get(i).get(j));
-                formulario.getQuestionario().get(i).getAlternativas().get(j).setProcesso(processoRepository.getReferenceById(dados.processos_id().get(i).get(j)));
+        formulario.setNome(dados.nome());
+        formularioRepository.save(formulario);
+    }
+    if(dados.questoes()!=null){
+        for (int i = 0;i<dados.questoes().size();i++){
+            if(dados.questoes().get(i).pergunta()!=null) {
+                Questao questao = questaoRepository.getReferenceById(dados.questoes().get(i).id());
+                questao.setPergunta(dados.questoes().get(i).pergunta());
+                questaoRepository.save(questao);
             }
-        }
-        if(formulario.getQuestionario().size() < dados.perguntas().size()){
-            for(int i = formulario.getQuestionario().size(); i < dados.perguntas().size();i++){
-                Questao questao = new Questao();
-                questao.setPergunta(dados.perguntas().get(i));
-
-                for(int j = 0; j < dados.alternativas().size();j++){
-                    Alternativa alternativa = new Alternativa();
-                    alternativa.setAlternativa(dados.alternativas().get(i).get(j));
-                    alternativa.setProcesso(processoRepository.getReferenceById(dados.processos_id().get(i).get(j)));
-                    questao.getAlternativas().add(alternativa);
+            if(dados.questoes().get(i).alternativas()!=null){
+                for(int j=0;j<dados.questoes().get(i).alternativas().size();j++) {
+                    if (dados.questoes().get(i).alternativas().get(j).alternativa() != null) {
+                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
+                        alternativa.setAlternativa(dados.questoes().get(i).alternativas().get(j).alternativa());
+                        if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
+                            alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
+                        }
+                        alternativaRepository.save(alternativa);
+                    }
+                    else if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
+                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
+                        alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
+                        alternativaRepository.save(alternativa);
+                    }
                 }
-
-                formulario.getQuestionario().add(questao);
             }
         }
-
-        /*for(int i = 0;i<formulario.getQuestionario().size();i++){
-            if(formulario.getQuestionario().get(i).getPergunta() == dados.perguntas())
-        }*/
-
     }
 
         return "okay";
@@ -84,7 +85,7 @@ public class FormularioService {
             questao.setPergunta(formularioDados.perguntas().get(i));
             questao.setFormulario(formulario);
             questao.setAlternativas(new ArrayList<>());
-            for(int j=0; j<formularioDados.alternativas().size();j++){
+            for(int j=0; j<formularioDados.alternativas().get(i).size();j++){
                 Alternativa alternativa = new Alternativa();
                 alternativa.setAlternativa(formularioDados.alternativas().get(i).get(j));
                 Processo processo = processoRepository.getReferenceById(formularioDados.processos_id().get(i).get(j));
@@ -110,31 +111,6 @@ public class FormularioService {
         return "okay";
     }
 
-    /*private List<Questao> generateQuestaoList(List<String> perguntas, List<List<String>> alternativas, List<List<String>> processos_alternativas, Formulario formulario){
-            List<Questao> questionario = new ArrayList<>();
-            for(int i=0, max = perguntas.size();i<max;i++) {
-                Questao novaQuestao = new Questao();
-                novaQuestao.setPergunta(perguntas.remove(0));
-                novaQuestao.setAlternativas(generateAlternativaList(alternativas.remove(0),processos_alternativas.remove(0),novaQuestao));
-                novaQuestao.setFormulario(formulario);
-                questionario.add(novaQuestao);
-            }
-        return questionario;
-    }
-
-    private List<Alternativa> generateAlternativaList(List<String> alternativas, List<String> processos_alternativas, Questao questao){
-        List<Alternativa> alternativasReturn = new ArrayList<>();
-        for(int i=0, max =alternativas.size(); i<max;i++){
-            Alternativa novaAlternativa = new Alternativa();
-            novaAlternativa.setAlternativa(alternativas.remove(0));
-            novaAlternativa.setProcesso(processos_alternativas.remove(0));
-            novaAlternativa.setQuestao(questao);
-
-            alternativasReturn.add(novaAlternativa);
-        }
-        return alternativasReturn;
-
-    }*/
 
     public Formulario encontrarFormulario(String nome){
         Formulario formulario = formularioRepository.findByNome(nome);
