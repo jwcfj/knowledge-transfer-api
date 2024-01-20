@@ -30,6 +30,8 @@ public class FormularioRespondidoService {
 
     @Autowired AlternativaRepository alternativaRepository;
 
+    @Autowired RespostaQuestaoRepository respostaQuestaoRepository;
+
     public void cadastrar(FormularioRespondidoDTO dados){
         //Stakeholder stakeholder = stakeholderRepository.getReferenceById(dados.stakeholder_id());
         //Formulario formulario = formularioRepository.getReferenceById(dados.formulario_id());
@@ -64,16 +66,15 @@ public class FormularioRespondidoService {
 
 
     public void atualizar(AtualizacaoFormularioRespondidoDTO dados) {
-        FormularioRespondido formularioRespondido = formularioRespondidoRepository.getReferenceById(dados.id());
-
-        for(int i=0; i<dados.respostasQuestoes().size();i++){
-            //RespostaQuestao respostaQuestao = formularioRespondido.get
-            for(int j=0; j<formularioRespondido.getRespostasQuestoes().size();j++){
-                if(dados.respostasQuestoes().get(i).questao_id()==formularioRespondido.getRespostasQuestoes().get(j).getQuestao().getId())
-                    formularioRespondido.getRespostasQuestoes().get(j).setAlternativa(alternativaRepository.getReferenceById(dados.respostasQuestoes().get(i).alternativa_id()));
+        if(dados.respostasQuestoes()!=null) {
+            for (int i = 0; i < dados.respostasQuestoes().size(); i++) {
+                if(dados.respostasQuestoes().get(i).alternativa_id()!=null){
+                    RespostaQuestao respostaQuestao = respostaQuestaoRepository.getReferenceById(dados.respostasQuestoes().get(i).id());
+                    respostaQuestao.setAlternativa(alternativaRepository.getReferenceById(dados.respostasQuestoes().get(i).alternativa_id()));
+                    respostaQuestaoRepository.save(respostaQuestao);
+                }
             }
-
         }
-        formularioRespondidoRepository.save(formularioRespondido);
+
     }
 }

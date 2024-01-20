@@ -7,6 +7,6 @@ import java.util.List;
 public record AtualizacaoFormularioRespondidoDTO(
         @NotNull
         Long id,
-        List<RespostaQuestaoDTO> respostasQuestoes
+        List<AtualizacaoRespostaQuestaoDTO> respostasQuestoes
 ) {
 }
