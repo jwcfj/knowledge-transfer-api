@@ -44,10 +44,10 @@ public class ProcessoController {
         processoService.deletar(id);
     }
 
-    @PostMapping("/{id}")
-    public void encontrarProcesso(@PathVariable Long id){
+    @GetMapping("/{id}")
+    public ListagemProcessoDTO encontrarProcesso(@PathVariable Long id){
 
-        processoService.encontrarProcesso(id);
+        return processoService.encontrarProcesso(id);
     }
 
 }

@@ -40,9 +40,9 @@ public class ProcessoService {
         processoRepository.deleteById(id);
     }
 
-    public void encontrarProcesso(Long id){
+    public ListagemProcessoDTO encontrarProcesso(Long id){
         Processo processo = processoRepository.getReferenceById(id);
-        System.out.println();
+        return new ListagemProcessoDTO(processo);
     }
 
 }
