@@ -41,8 +41,13 @@ public class ProcessoService {
     }
 
     public ListagemProcessoDTO encontrarProcesso(Long id){
-        Processo processo = processoRepository.getReferenceById(id);
-        return new ListagemProcessoDTO(processo);
+        try{
+            Processo processo = processoRepository.getReferenceById(id);
+            return new ListagemProcessoDTO(processo);
+        }
+        catch(Exception e){
+            return null;
+        }
     }
 
 }
