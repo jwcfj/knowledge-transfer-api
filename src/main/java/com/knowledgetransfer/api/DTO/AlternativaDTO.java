@@ -6,7 +6,7 @@ import java.util.List;
 
 public record AlternativaDTO(
         @NotNull
-        String alternativa,
+        String pergunta,//alternativa,
         @NotNull
         String processo) {
 }

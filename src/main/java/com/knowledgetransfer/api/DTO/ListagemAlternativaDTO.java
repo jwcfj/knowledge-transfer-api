@@ -5,10 +5,13 @@ import com.knowledgetransfer.api.model.Formulario;
 
 public record ListagemAlternativaDTO(
         Long id,
-        String alternativa,
-        Long processo_id
+        //String alternativa,
+        String pergunta,
+        Long processo_id,
+        String processo
 ) {
     public ListagemAlternativaDTO(Alternativa alternativa){
-        this(alternativa.getId(), alternativa.getAlternativa(),alternativa.getProcesso().getId());
+        this(alternativa.getId(), alternativa.getPergunta()/*alternativa.getAlternativa()*/,alternativa.getProcesso().getId(),alternativa.getProcesso().getNome());
     }
+
 }

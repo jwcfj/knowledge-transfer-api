@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 public record AtualizacaoAlternativaDTO(
         @NotNull
         Long id,
-        String alternativa,
-        AtualizacaoFormularioProcessoDTO processo
+        String pergunta,
+        String processo
 ) {
 }

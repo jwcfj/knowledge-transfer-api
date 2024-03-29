@@ -1,9 +1,6 @@
 package com.knowledgetransfer.api.controller;
 
-import com.knowledgetransfer.api.DTO.AtualizacaoProcessoDTO;
-import com.knowledgetransfer.api.DTO.ListagemProcessoDTO;
-import com.knowledgetransfer.api.DTO.ListagemStakeholderDTO;
-import com.knowledgetransfer.api.DTO.ProcessoDTO;
+import com.knowledgetransfer.api.DTO.*;
 import com.knowledgetransfer.api.model.Processo;
 import com.knowledgetransfer.api.service.ProcessoService;
 import jakarta.validation.Valid;
@@ -13,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/processo")
@@ -36,6 +35,14 @@ public class ProcessoController {
     @GetMapping
     public Page<ListagemProcessoDTO> listar(Pageable paginacao){
         return processoService.listar(paginacao);
+    }
+
+    @PostMapping("/indicados")
+    //public IndicadosDTO encontrarIndicados(EncontrarIndicadosDTO indicados){
+//        public List<RecorrenciaProcessoDTO> encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
+    public RecorrenciaDTO encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
+//    public void encontrarIndicados(@RequestBody Object indicados){
+        return processoService.encontrarIndicados(indicados);
     }
 
     @DeleteMapping("/{id}")

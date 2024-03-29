@@ -3,6 +3,7 @@ package com.knowledgetransfer.api.controller;
 import com.knowledgetransfer.api.DTO.AtualizacaoFormularioDTO;
 import com.knowledgetransfer.api.DTO.FormularioDTO;
 import com.knowledgetransfer.api.DTO.ListagemFormularioDTO;
+import com.knowledgetransfer.api.model.Formulario;
 import com.knowledgetransfer.api.service.FormularioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/formulario")
@@ -41,6 +44,19 @@ public class FormularioController {
     @Transactional
     public void deletar(@PathVariable Long id){
         formularioService.deletar(id);
+    }
+
+
+    @GetMapping("/{id}")
+    @Transactional
+    public void encontrarFormularioPorId(@PathVariable Long id){
+        formularioService.encontrarFormularioPorId(id);
+    }
+
+    @GetMapping("/nome/{nome}")
+    @Transactional
+    public ListagemFormularioDTO encontrarFormularioPorNome(@PathVariable String nome){
+        return formularioService.encontrarFormularioPorNome(nome);
     }
 
     @GetMapping

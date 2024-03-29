@@ -9,14 +9,15 @@ import java.util.stream.Collectors;
 
 public record ListagemQuestaoDTO(
         Long id,
-        String pergunta,
-        List<ListagemAlternativaDTO> alternativas
+        String pergunta//,
+//        List<ListagemAlternativaDTO> alternativas
 ) {
     public ListagemQuestaoDTO(Questao questao){
-        this(questao.getId(),questao.getPergunta(), mapAlternativa(questao.getAlternativas()));
+        this( questao.getId(),questao.getPergunta() );//, mapAlternativa(questao.getAlternativas()));
     }
-    private static List<ListagemAlternativaDTO> mapAlternativa(List<Alternativa> alternativas) {
-        return alternativas.stream().map(ListagemAlternativaDTO::new).collect(Collectors.toList());
-    }
+//
+//    private static List<ListagemAlternativaDTO> mapAlternativa(List<Alternativa> alternativas) {
+//        return alternativas.stream().map(ListagemAlternativaDTO::new).collect(Collectors.toList());
+//    }
 
 }

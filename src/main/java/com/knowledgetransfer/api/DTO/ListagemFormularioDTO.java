@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record ListagemFormularioDTO(
+public record  ListagemFormularioDTO(
         Long id,
         String nome,
         List<ListagemQuestaoDTO> questoes

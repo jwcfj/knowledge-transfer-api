@@ -22,8 +22,8 @@ public class Questao {
     private Long id;
     private String pergunta;
 
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Alternativa> alternativas;
+//    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+//    private List<Alternativa> alternativas;
 
     @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<RespostaQuestao> respostasQuestoes;
@@ -31,16 +31,16 @@ public class Questao {
     @ManyToOne
     private  Formulario formulario;
 
-    public Questao(QuestaoDTO dados){
-        this.setPergunta(dados.pergunta());
-        alternativas = new ArrayList<>();
-        for(int i=0; i<dados.alternativas().size();i++){
-            Alternativa novaAlternativa = new Alternativa(new AlternativaDTO(dados.alternativas().remove(0),dados.processos_alternativas().remove(0)));
-            novaAlternativa.setQuestao(this);
-            alternativas.add(novaAlternativa);
-        }
-
-
-    }
+//    public Questao(QuestaoDTO dados){
+//        this.setPergunta(dados.pergunta());
+//        alternativas = new ArrayList<>();
+//        for(int i=0; i<dados.alternativas().size();i++){
+//            Alternativa novaAlternativa = new Alternativa(new AlternativaDTO(dados.alternativas().remove(0),dados.processos_alternativas().remove(0)));
+//            novaAlternativa.setQuestao(this);
+//            alternativas.add(novaAlternativa);
+//        }
+//
+//
+//    }
 
 }

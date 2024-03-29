@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FormularioService {
@@ -49,23 +49,23 @@ public class FormularioService {
                 questao.setPergunta(dados.questoes().get(i).pergunta());
                 questaoRepository.save(questao);
             }
-            if(dados.questoes().get(i).alternativas()!=null){
-                for(int j=0;j<dados.questoes().get(i).alternativas().size();j++) {
-                    if (dados.questoes().get(i).alternativas().get(j).alternativa() != null) {
-                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
-                        alternativa.setAlternativa(dados.questoes().get(i).alternativas().get(j).alternativa());
-                        if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
-                            alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
-                        }
-                        alternativaRepository.save(alternativa);
-                    }
-                    else if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
-                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
-                        alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
-                        alternativaRepository.save(alternativa);
-                    }
-                }
-            }
+//            if(dados.questoes().get(i).alternativas()!=null){
+//                for(int j=0;j<dados.questoes().get(i).alternativas().size();j++) {
+//                    if (dados.questoes().get(i).alternativas().get(j).alternativa() != null) {
+//                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
+//                        //alternativa.setAlternativa(dados.questoes().get(i).alternativas().get(j).alternativa());
+//                        if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
+//                            alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
+//                        }
+//                        alternativaRepository.save(alternativa);
+//                    }
+//                    else if(dados.questoes().get(i).alternativas().get(j).processo()!=null){
+//                        Alternativa alternativa = alternativaRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).id());
+//                        alternativa.setProcesso(processoRepository.getReferenceById(dados.questoes().get(i).alternativas().get(j).processo().id()));
+//                        alternativaRepository.save(alternativa);
+//                    }
+//                }
+//            }
         }
     }
 
@@ -84,14 +84,14 @@ public class FormularioService {
             Questao questao = new Questao();
             questao.setPergunta(formularioDados.perguntas().get(i));
             questao.setFormulario(formulario);
-            questao.setAlternativas(new ArrayList<>());
+            //questao.setAlternativas(new ArrayList<>());
             for(int j=0; j<formularioDados.alternativas().get(i).size();j++){
                 Alternativa alternativa = new Alternativa();
-                alternativa.setAlternativa(formularioDados.alternativas().get(i).get(j));
+                //alternativa.setAlternativa(formularioDados.alternativas().get(i).get(j));
                 Processo processo = processoRepository.getReferenceById(formularioDados.processos_id().get(i).get(j));
                 alternativa.setProcesso(  processo);
-                alternativa.setQuestao(questao);
-                questao.getAlternativas().add(alternativa);
+                //alternativa.setQuestao(questao);
+                //questao.getAlternativas().add(alternativa);
             }
             formulario.getQuestionario().add(questao);
         }
@@ -112,12 +112,26 @@ public class FormularioService {
     }
 
 
-    public Formulario encontrarFormulario(String nome){
+    public ListagemFormularioDTO encontrarFormularioPorNome(String nome){
         Formulario formulario = formularioRepository.findByNome(nome);
+        System.out.println(formulario);
+        ListagemFormularioDTO listagemFormularioDTO = new ListagemFormularioDTO(formulario);
+        System.out.println(listagemFormularioDTO);
+
         if(formulario == null){
             System.out.println("error name not found form doesnt exist");
         }
-        return formulario;
+        return listagemFormularioDTO;
+    }
+
+    public void encontrarFormularioPorId(Long id){
+        Optional<Formulario> formulario = formularioRepository.findById(id);
+        System.out.println(formulario);
+        //formulario.
+        /*if(formulario == null){
+            System.out.println("error name not found form doesnt exist");
+        }
+        return formulario;*/
     }
 
     public Page<ListagemFormularioDTO> listar(Pageable paginacao){
