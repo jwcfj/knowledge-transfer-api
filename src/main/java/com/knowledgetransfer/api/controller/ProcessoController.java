@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -51,10 +53,13 @@ public class ProcessoController {
         processoService.deletar(id);
     }
 
-    @PostMapping("/{id}")
-    public void encontrarProcesso(@PathVariable Long id){
-
-        processoService.encontrarProcesso(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> encontrarProcesso(@PathVariable Long id){
+        ListagemProcessoDTO processo = processoService.encontrarProcesso(id);
+        if(processo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(processo);
     }
 
 }

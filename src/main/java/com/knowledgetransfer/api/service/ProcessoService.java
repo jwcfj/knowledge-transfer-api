@@ -41,9 +41,14 @@ public class ProcessoService {
         processoRepository.deleteById(id);
     }
 
-    public void encontrarProcesso(Long id){
-        Processo processo = processoRepository.getReferenceById(id);
-        System.out.println();
+    public ListagemProcessoDTO encontrarProcesso(Long id){
+        try{
+            Processo processo = processoRepository.getReferenceById(id);
+            return new ListagemProcessoDTO(processo);
+        }
+        catch(Exception e){
+            return null;
+        }
     }
 
     //public List<RecorrenciaProcessoDTO> encontrarIndicados(EncontrarIndicadosDTO indicados){
