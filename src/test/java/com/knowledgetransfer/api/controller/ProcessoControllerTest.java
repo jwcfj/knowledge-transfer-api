@@ -113,6 +113,7 @@ public class ProcessoControllerTest {
             if(processo.get("nome").asText().equals(nome) && processo.get("descricao").asText().equals(descricao)){
                 encontrouProcesso = true;
                 id = (long) processo.get("id").asInt();
+                break;
             }
         }
         var responseDELETE = mvc.perform(delete("/processo/"+id)).andReturn().getResponse();
