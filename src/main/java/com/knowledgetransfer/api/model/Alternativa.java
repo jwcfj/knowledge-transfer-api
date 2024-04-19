@@ -29,8 +29,6 @@ public class Alternativa {
     @ManyToOne
     private Processo processo;
 
-    @OneToMany(mappedBy = "alternativa", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<RespostaQuestao> respostasQuestoes;
 
     public Alternativa(AlternativaDTO dados) {
         //this.setAlternativa(dados.alternativa());

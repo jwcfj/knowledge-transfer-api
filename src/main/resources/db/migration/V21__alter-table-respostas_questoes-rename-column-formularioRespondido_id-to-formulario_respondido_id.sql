@@ -1,2 +1,0 @@
-ALTER TABLE respostas_questoes
-rename COLUMN formularioRespondido_id to formulario_respondido_id;

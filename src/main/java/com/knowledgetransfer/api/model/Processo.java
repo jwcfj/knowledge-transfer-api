@@ -23,10 +23,6 @@ public class Processo {
     private String nome;
     private String descricao;
 
-
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<FormularioRespondido> formulariosRespondidos;
-
     @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Alternativa> alternativas;
 
