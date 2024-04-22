@@ -24,19 +24,34 @@ public class ProcessoController {
 
     @PostMapping
     @Transactional
-    public void cadastrar(@RequestBody @Valid ProcessoDTO dados){
-        processoService.cadastrar(dados);
+    public  ResponseEntity<Object> cadastrar(@RequestBody @Valid ProcessoDTO dados){
+        try {
+            return ResponseEntity.ok().body(processoService.cadastrar(dados));
+        }
+        catch(Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao tentar cadastrar Processo");
+        }
     }
 
     @PutMapping
     @Transactional
-    public void atualizar(@RequestBody @Valid AtualizacaoProcessoDTO dados){
-        processoService.atualizar(dados);
+    public ResponseEntity<Object> atualizar(@RequestBody @Valid AtualizacaoProcessoDTO dados){
+        try {
+            processoService.atualizar(dados);
+            return ResponseEntity.ok().build();
+        }
+        catch(Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
-    public Page<ListagemProcessoDTO> listar(Pageable paginacao){
-        return processoService.listar(paginacao);
+    public ResponseEntity<Object> listar(Pageable paginacao){
+        try {
+            return ResponseEntity.ok().body(processoService.listar(paginacao));
+        }catch(Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar Processos");
+        }
     }
 
     @PostMapping("/indicados")
@@ -49,8 +64,13 @@ public class ProcessoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deletar(@PathVariable Long id){
-        processoService.deletar(id);
+    public ResponseEntity<Object> deletar(@PathVariable Long id){
+        try {
+            processoService.deletar(id);
+            return ResponseEntity.ok().build();
+        }catch(Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")

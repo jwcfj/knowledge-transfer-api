@@ -20,8 +20,10 @@ public class ProcessoService {
     @Autowired
     private ProcessoRepository processoRepository;
 
-    public void cadastrar(ProcessoDTO dados){
-        processoRepository.save(new Processo(dados));
+    public ProcessoCadastradoDTO cadastrar(ProcessoDTO dados){
+        Processo processo = processoRepository.save(new Processo(dados));
+        ProcessoCadastradoDTO processoCadastradoDTO = new ProcessoCadastradoDTO(processo.getId(),processo.getNome(), processo.getDescricao());
+        return processoCadastradoDTO;
     }
 
     public void atualizar(AtualizacaoProcessoDTO dados) {

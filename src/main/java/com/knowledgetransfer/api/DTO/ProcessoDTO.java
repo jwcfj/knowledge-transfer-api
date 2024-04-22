@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record ProcessoDTO(
-        @NotBlank
+        @NotNull @NotBlank
         String nome,
-        @NotNull
+        @NotNull @NotBlank
         String descricao
 ) {
         public ProcessoDTO(Processo processo){

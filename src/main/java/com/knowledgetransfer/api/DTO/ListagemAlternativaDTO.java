@@ -1,17 +1,23 @@
 package com.knowledgetransfer.api.DTO;
 
 import com.knowledgetransfer.api.model.Alternativa;
+import com.knowledgetransfer.api.model.Possui;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+//tela alternativas
 public record ListagemAlternativaDTO(
+
         Long id,
-        //String alternativa,
         String pergunta,
-        Long processo_id,
-        String processo
+
+        List<ListagemProcessosPossuidosClientDTO> processosPossuidos
 ) {
     public ListagemAlternativaDTO(Alternativa alternativa){
-        this(alternativa.getId(), alternativa.getPergunta(),1L,"a");
-        //this(alternativa.getId(), alternativa.getPergunta()/*alternativa.getAlternativa()*/,alternativa.getProcesso().getId(),alternativa.getProcesso().getNome());
+        this( alternativa.getId(), alternativa.getPergunta(),mapprocessosPossuidos(alternativa.getRelacionamento_possui()) );
     }
-
+    private static List<ListagemProcessosPossuidosClientDTO> mapprocessosPossuidos(List<Possui> processosPossuidos) {
+        return processosPossuidos.stream().map(ListagemProcessosPossuidosClientDTO::new).collect(Collectors.toList());
+    }
 }

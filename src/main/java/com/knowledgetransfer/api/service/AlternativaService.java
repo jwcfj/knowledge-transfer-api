@@ -13,10 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
 public class AlternativaService {
 
@@ -46,7 +42,7 @@ public class AlternativaService {
 
     }
 
-    public AlternativaCadastradaDTO cadastrarv2(AlternativaDTO alternativaDTO){
+    public AlternativaCadastradaDTO cadastrarAlternativa(AlternativaDTO alternativaDTO){
         Alternativa alternativa = new Alternativa();
         alternativa.setPergunta(alternativaDTO.pergunta());
         alternativa = alternativaRepository.save(alternativa);
@@ -97,13 +93,13 @@ public class AlternativaService {
 //
 //    }
 
-    public Page<ListagemAlternativaDTO> listar(Pageable paginacao){
-        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTO::new);
+    public Page<ListagemAlternativaDTOvold> listar(Pageable paginacao){
+        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTOvold::new);
     }
 
     //esse endpoint sera usado no client
-    public Page<ListagemAlternativaClientDTO> listarAlternativas(Pageable paginacao){
-        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaClientDTO::new);
+    public Page<ListagemAlternativaDTO> listarAlternativas(Pageable paginacao){
+        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTO::new);
     }
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -120,19 +116,25 @@ public class AlternativaService {
        // if(dados.processo()!=null) alternativa.setProcesso(processoRepository.findByNome(dados.processo()));
     }
 
-    public void atualizarAlternativa(AtualizacaoAlternativaDTOv2 dados) {
+    public AtualizacaoAlternativaDTOv2 atualizarAlternativa(AtualizacaoAlternativaDTOv2 dados) {
         Alternativa alternativa = alternativaRepository.getReferenceById(dados.id());
-        if(dados.pergunta()!=null) alternativa.setPergunta(dados.pergunta());
+        alternativa.setPergunta(dados.pergunta());
+        return dados;
     }
 
-    //AJEITAR ISSO AQUI
-    public void atualizarProcessoPossuido(AtualizacaoAlternativaDTOv2 dados) {
-        Alternativa alternativa = alternativaRepository.getReferenceById(dados.id());
-        if(dados.pergunta()!=null) alternativa.setPergunta(dados.pergunta());
+    public AtualizacaoProcessoPossuidoDTO atualizarProcessoPossuido(AtualizacaoProcessoPossuidoDTO dados) {
+        Possui possui = possuiRepository.getReferenceById(dados.id());
+        possui.setProcesso(processoRepository.getReferenceById(dados.processo_id()));
+        return dados;
+
     }
 
     public void deletar(Long id){
         alternativaRepository.deleteById(id);
+    }
+
+    public void deletarProcessoPossuido(Long id){
+        possuiRepository.deleteById(id);
     }
 
 }

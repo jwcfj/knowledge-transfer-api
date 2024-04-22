@@ -3,11 +3,13 @@ package com.knowledgetransfer.api.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
-
-public record AlternativaDTO(
+public record ProcessoCadastradoDTO(
+        @NotNull
+        Long id,
         @NotNull @NotBlank
-        String pergunta//alternativa,
+        String nome,
+        @NotNull @NotBlank
+        String descricao
         //,
 //        @NotNull
 //        String processos
