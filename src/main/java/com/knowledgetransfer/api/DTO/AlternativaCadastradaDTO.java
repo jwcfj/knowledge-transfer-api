@@ -2,9 +2,9 @@ package com.knowledgetransfer.api.DTO;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
-
-public record AlternativaDTO(
+public record AlternativaCadastradaDTO(
+        @NotNull
+        Long alternativa_id,
         @NotNull
         String pergunta//alternativa,
         //,

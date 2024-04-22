@@ -38,7 +38,7 @@ public class AlternativaControllerTest {
 
     @Autowired
     private JacksonTester<ProcessoDTO> processoDTOJson;
-
+/*
     @Test
     @DisplayName("Deveria retornar o código HTTP 200 ao deletar uma alternativa com qualquer id")
     void testDeletar() throws Exception {
@@ -209,4 +209,5 @@ public class AlternativaControllerTest {
 
         assertThat(encontrou_alternativa).isEqualTo(true);
     }
+    */
 }

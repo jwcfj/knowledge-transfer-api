@@ -26,8 +26,8 @@ public class Alternativa {
 //    @ManyToOne
 //    private  Questao questao;
 
-    @ManyToOne
-    private Processo processo;
+    @OneToMany(mappedBy = "alternativa", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Possui> relacionamento_possui;
 
 
     public Alternativa(AlternativaDTO dados) {

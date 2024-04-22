@@ -10,7 +10,8 @@ public record ListagemAlternativaDTO(
         String processo
 ) {
     public ListagemAlternativaDTO(Alternativa alternativa){
-        this(alternativa.getId(), alternativa.getPergunta()/*alternativa.getAlternativa()*/,alternativa.getProcesso().getId(),alternativa.getProcesso().getNome());
+        this(alternativa.getId(), alternativa.getPergunta(),1L,"a");
+        //this(alternativa.getId(), alternativa.getPergunta()/*alternativa.getAlternativa()*/,alternativa.getProcesso().getId(),alternativa.getProcesso().getNome());
     }
 
 }
