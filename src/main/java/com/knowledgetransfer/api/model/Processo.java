@@ -23,7 +23,8 @@ public class Processo {
     private String nome;
     private String descricao;
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "processo",
+            cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Possui> relacionamento_possui;
 
     public Processo(ProcessoDTO dados){

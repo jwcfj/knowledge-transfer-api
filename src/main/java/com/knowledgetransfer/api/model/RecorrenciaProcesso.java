@@ -1,5 +1,8 @@
 package com.knowledgetransfer.api.model;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class RecorrenciaProcesso {
     private Long id;
     private Long recorrencia;
@@ -15,12 +18,12 @@ public class RecorrenciaProcesso {
         //this.descricao=descricao;
     }
 
-    public RecorrenciaProcesso(Long id, Long recorrencia, String processo_nome, String descricao) {
-        this.id = id;
-        this.recorrencia = recorrencia;
-        this.processo_nome=processo_nome;
-        this.descricao=descricao;
-    }
+//    public RecorrenciaProcesso(Long id, Long recorrencia, String processo_nome, String descricao) {
+//        this.id = id;
+//        this.recorrencia = recorrencia;
+//        this.processo_nome=processo_nome;
+//        this.descricao=descricao;
+//    }
     public RecorrenciaProcesso() {
     }
 

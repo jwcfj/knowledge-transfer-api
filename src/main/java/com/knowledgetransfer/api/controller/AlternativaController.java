@@ -56,10 +56,19 @@ public class AlternativaController {
 //        return alternativaService.listar(paginacao);
 //    }
 
-    @GetMapping
-    public ResponseEntity<Object> listar(Pageable paginacao){
+    @GetMapping()
+    public ResponseEntity<Object> listarAlternativaKtadmin(Pageable paginacao){
         try {
-            return ResponseEntity.ok().body(alternativaService.listarAlternativas(paginacao));
+            return ResponseEntity.ok().body(alternativaService.listarAlternativasv2(paginacao));
+        }catch(Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao buscar Alternativas");
+        }
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<Object> listarAlternativaCliente(Pageable paginacao){
+        try {
+            return ResponseEntity.ok().body(alternativaService.listarAlternativaCliente(paginacao));
         }catch(Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao buscar Alternativas");
         }
@@ -87,15 +96,15 @@ public class AlternativaController {
     }
 
 
-    @PutMapping("/processo-possuido")
-    @Transactional
-    public ResponseEntity<AtualizacaoProcessoPossuidoDTO> atualizarProcessoPossuido(@RequestBody @Valid AtualizacaoProcessoPossuidoDTO dados){
-        try {
-       return  ResponseEntity.ok().body(alternativaService.atualizarProcessoPossuido(dados));
-        }catch(Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @PutMapping("/processo-possuido")
+//    @Transactional
+//    public ResponseEntity<AtualizacaoProcessoPossuidoDTO> atualizarProcessoPossuido(@RequestBody @Valid AtualizacaoProcessoPossuidoDTO dados){
+//        try {
+//       return  ResponseEntity.ok().body(alternativaService.atualizarProcessoPossuido(dados));
+//        }catch(Exception e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @DeleteMapping("/{id}")
     @Transactional
@@ -108,11 +117,11 @@ public class AlternativaController {
         }
     }
 
-    @DeleteMapping("/processo-possuido/{id}")
+    @DeleteMapping("/processo-possuido/{possui_id}")
     @Transactional
-    public ResponseEntity<Object> deletarProcessoPossuido(@PathVariable @NotNull @PositiveOrZero Long id){
+    public ResponseEntity<Object> deletarProcessoPossuido(@PathVariable @NotNull @PositiveOrZero Long possui_id){
         try {
-            alternativaService.deletarProcessoPossuido(id);
+            alternativaService.deletarProcessoPossuido(possui_id);
             return ResponseEntity.ok().build();
         }catch(Exception e) {
             return ResponseEntity.notFound().build();

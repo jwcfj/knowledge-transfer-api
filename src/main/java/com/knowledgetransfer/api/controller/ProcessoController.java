@@ -55,11 +55,14 @@ public class ProcessoController {
     }
 
     @PostMapping("/indicados")
-    //public IndicadosDTO encontrarIndicados(EncontrarIndicadosDTO indicados){
-//        public List<RecorrenciaProcessoDTO> encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
-    public RecorrenciaDTO encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
-//    public void encontrarIndicados(@RequestBody Object indicados){
-        return processoService.encontrarIndicados(indicados);
+
+    //public RecorrenciaDTO encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
+    public ResponseEntity<Object> encontrarIndicados(@RequestBody @Valid EncontrarIndicadosbyAlternativasDTOv2 indicados){
+        try {
+            return ResponseEntity.ok().body(processoService.encontrarIndicadosv2(indicados));
+        }catch(Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @DeleteMapping("/{id}")

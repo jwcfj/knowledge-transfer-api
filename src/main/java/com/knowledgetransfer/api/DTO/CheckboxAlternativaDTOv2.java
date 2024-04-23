@@ -3,10 +3,11 @@ package com.knowledgetransfer.api.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record AtualizacaoAlternativaDTOv2(
+public record CheckboxAlternativaDTOv2(
         @NotNull
         Long alternativa_id,
-        @NotNull @NotBlank
-        String pergunta
+        @NotNull
+        boolean checked
 ) {
+
 }

@@ -26,7 +26,9 @@ public class Alternativa {
 //    @ManyToOne
 //    private  Questao questao;
 
-    @OneToMany(mappedBy = "alternativa", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "alternativa",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
     private List<Possui> relacionamento_possui;
 
 

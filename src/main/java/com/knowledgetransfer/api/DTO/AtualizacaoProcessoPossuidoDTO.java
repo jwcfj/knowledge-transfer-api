@@ -5,7 +5,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 public record AtualizacaoProcessoPossuidoDTO(
         @NotNull @PositiveOrZero
-        Long id,
+        Long possui_id,
         @NotNull @PositiveOrZero
         Long alternativa_id,
         @NotNull @PositiveOrZero

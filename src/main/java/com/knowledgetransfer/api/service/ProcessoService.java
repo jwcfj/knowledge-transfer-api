@@ -1,10 +1,9 @@
 package com.knowledgetransfer.api.service;
 
 import com.knowledgetransfer.api.DTO.*;
-import com.knowledgetransfer.api.model.CheckboxAlternativa;
-import com.knowledgetransfer.api.model.Processo;
-import com.knowledgetransfer.api.model.Recorrencia;
-import com.knowledgetransfer.api.model.RecorrenciaProcesso;
+import com.knowledgetransfer.api.model.*;
+import com.knowledgetransfer.api.repository.AlternativaRepository;
+import com.knowledgetransfer.api.repository.PossuiRepository;
 import com.knowledgetransfer.api.repository.ProcessoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +19,11 @@ public class ProcessoService {
     @Autowired
     private ProcessoRepository processoRepository;
 
+    @Autowired
+    private AlternativaRepository alternativaRepository;
+
+    @Autowired
+    private PossuiRepository possuiRepository;
     public ProcessoCadastradoDTO cadastrar(ProcessoDTO dados){
         Processo processo = processoRepository.save(new Processo(dados));
         ProcessoCadastradoDTO processoCadastradoDTO = new ProcessoCadastradoDTO(processo.getId(),processo.getNome(), processo.getDescricao());
@@ -52,6 +56,110 @@ public class ProcessoService {
             return null;
         }
     }
+
+    public RecorrenciaDTO encontrarIndicadosv2(EncontrarIndicadosbyAlternativasDTOv2 encontrarIndicadosbyAlternativasDTOv2){
+        List<Processo> processos = new ArrayList<>();
+        List<Alternativa> alternativas = new ArrayList<>();
+
+        for (int i=0;i<encontrarIndicadosbyAlternativasDTOv2.alternativas().size();i++){
+            if(encontrarIndicadosbyAlternativasDTOv2.alternativas().get(i).checked()) {
+                alternativas.add(alternativaRepository.getReferenceById(encontrarIndicadosbyAlternativasDTOv2.alternativas().get(i).alternativa_id()));
+            }
+        }
+
+        List<Possui> processosPossuidosSelecionados = possuiRepository.findAllByAlternativaIn(alternativas);
+        List<ProcessoRecorrente> processoRecorrentes= new ArrayList<>();
+        for (int i = 0; i<processosPossuidosSelecionados.size();i++){
+            processoRecorrentes.add( new ProcessoRecorrente(processosPossuidosSelecionados.get(i).getProcesso().getId(),
+                    processosPossuidosSelecionados.get(i).getProcesso().getNome(),processosPossuidosSelecionados.get(i).getProcesso().getDescricao(),0l)
+            );
+        }
+
+        //////
+
+//        List<Possui> processosPossuidosSelecionados =  new ArrayList<>();
+//        for (int i=0;i<encontrarIndicadosbyAlternativasDTOv2.alternativas().size();i++){
+//            if(encontrarIndicadosbyAlternativasDTOv2.alternativas().get(i).checked()) {
+//                possuiRepository.findAllByAlternativa(alternativaRepository.getReferenceById(encontrarIndicadosbyAlternativasDTOv2.alternativas().get(i).alternativa_id())).stream().map(
+//                        processosPossuidosSelecionados::add
+//                );
+//            }
+//        }
+
+        List<ProcessoRecorrente> temp = new ArrayList<ProcessoRecorrente>(processoRecorrentes.size());
+        for (int i = 0; i < processoRecorrentes.size(); i++) {
+            temp.add(new ProcessoRecorrente());
+
+        }
+        mergesortv2(processoRecorrentes,temp,0,processoRecorrentes.size()-1);
+
+        Long recorrencia = 0l;
+        Long total = 0l;
+        Long processo_id_atual = -1l;
+        processo_id_atual = processoRecorrentes.get(0).getId();
+        List<RecorrenciaProcessoDTO> recorrenciaProcessoDTOS = new ArrayList<RecorrenciaProcessoDTO>();
+        int index_processo_anterior=0;
+        for (int i = 0; i < processoRecorrentes.size(); i++) {
+            if (processo_id_atual == processoRecorrentes.get(i).getId()) {
+                recorrencia++;
+                total++;
+            }
+            else{
+                recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+                processo_id_atual = processoRecorrentes.get(i).getId();
+                index_processo_anterior=i;
+                recorrencia=1l;
+                total++;
+
+            }
+        }
+        recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+//        for (int i = 0; i < processoRecorrentes.size(); i++) {
+//            //if (processo_id_atual != processoRecorrentes.get(i).getId()) {
+//                int y=i;
+//                processo_id_atual = processoRecorrentes.get(i).getId();
+//                while(y<processoRecorrentes.size() && processo_id_atual == processoRecorrentes.get(y).getId()) {
+//                    recorrencia++;
+//                    total++;
+//                    y++;
+//                }
+//                recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(i).getNome(),processoRecorrentes.get(i).getDescricao(),recorrencia));
+//                i=y;
+//                recorrencia=0l;
+//                processo_id_atual = processoRecorrentes.get(i).getId();
+//           // }
+//        }
+        RecorrenciaDTO recorrenciaDTO = new RecorrenciaDTO(total,recorrenciaProcessoDTOS);
+        return recorrenciaDTO;
+
+////        for(int i =0;i<alternativas.size();i++) {
+////            possuiRepository.findAllByAlternativa(alternativas.get(i));
+////        }
+
+//        List<Possui> temp = new ArrayList<Possui>(processosPossuidosSelecionados.size());
+//        for (int i = 0; i < processosPossuidosSelecionados.size(); i++) {
+//            temp.add(new Possui());
+//        }
+//        mergesortv2(processosPossuidosSelecionados,temp,0,processosPossuidosSelecionados.size()-1);
+
+
+//        Long recorrencia = 0l;
+//        Long total = 0l;
+//        Long processo_id_atual = processosPossuidosSelecionados.get(0).getProcesso().getId();
+//        List<RecorrenciaProcessoDTO> recorrenciaProcessoDTOS = new ArrayList<RecorrenciaProcessoDTO>();
+//        for (int i = 0; i < processosPossuidosSelecionados.size(); i++) {
+//            recorrencia += 1;
+//            total += 1;
+//            if (processo_id_atual != processosPossuidosSelecionados.get(i).getProcesso().getId()) {
+//                recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processosPossuidosSelecionados.get(i).getProcesso().getNome(),processosPossuidosSelecionados.get(i).getProcesso().getDescricao(),recorrencia));
+//                processo_id_atual = processosPossuidosSelecionados.get(i).getProcesso().getId();
+//                recorrencia = 0l;
+//            }
+//        }
+//        RecorrenciaDTO recorrenciaDTO = new RecorrenciaDTO(total,recorrenciaProcessoDTOS);
+//        return recorrenciaDTO;
+    }
+
 
     //public List<RecorrenciaProcessoDTO> encontrarIndicados(EncontrarIndicadosDTO indicados){
     public RecorrenciaDTO encontrarIndicados(EncontrarIndicadosDTO indicados){
@@ -124,6 +232,30 @@ public class ProcessoService {
                 A.set(curr,temp.get(i1++));
                 //A[curr] = temp[i1++];
             else if (temp.get(i1).getRecorrencia()>temp.get(i2).getRecorrencia()) // Get bigger
+                //else if (temp[i1]<temp[i2]) // Get smaller
+                A.set(curr,temp.get(i1++));
+                //A[curr] = temp[i1++];
+            else A.set(curr,temp.get(i2++));
+            //else A[curr] = temp[i2++];
+        }
+    }
+
+    void mergesortv2(List<ProcessoRecorrente> A,List<ProcessoRecorrente> temp, int l, int r){
+        int mid = (l+r)/2; // Select midpoint
+        if (l == r) return; // List has one element
+        mergesortv2(A, temp, l, mid); // Mergesort first half
+        mergesortv2(A, temp, mid+1, r); // Mergesort second half
+        for (int i=l; i<=r; i++) // Copy subarray to temp
+            temp.set(i,A.get(i));
+        int i1 = l; int i2 = mid + 1;
+        for (int curr=l; curr<=r; curr++) {
+            if (i1 == mid+1) // Left sublist exhausted
+                A.set(curr,temp.get(i2++));
+                //A[curr] = temp[i2++];
+            else if (i2 > r) // Right sublist exhausted
+                A.set(curr,temp.get(i1++));
+                //A[curr] = temp[i1++];
+            else if (temp.get(i1).getId()>temp.get(i2).getId()) // Get bigger
                 //else if (temp[i1]<temp[i2]) // Get smaller
                 A.set(curr,temp.get(i1++));
                 //A[curr] = temp[i1++];
