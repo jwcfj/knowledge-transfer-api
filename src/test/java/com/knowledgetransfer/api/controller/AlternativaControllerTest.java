@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.knowledgetransfer.api.DTO.AlternativaDTO;
-import com.knowledgetransfer.api.DTO.ProcessoDTO;
 
 import java.util.Random;
 
@@ -36,9 +35,6 @@ public class AlternativaControllerTest {
     @Autowired
     private JacksonTester<AlternativaDTO> alternativaDTOJson;
 
-    @Autowired
-    private JacksonTester<ProcessoDTO> processoDTOJson;
-/*
     @Test
     @DisplayName("Deveria retornar o código HTTP 200 ao deletar uma alternativa com qualquer id")
     void testDeletar() throws Exception {
@@ -52,30 +48,30 @@ public class AlternativaControllerTest {
     }
 
     @Test
+    @DisplayName("Deveria retornar o código HTTP 200 ao deletar um processo possuído com qualquer id")
+    void testDeletarProcessoPossuido() throws Exception {
+
+        Random rand = new Random();
+
+        Long id = (long) rand.nextInt(101); //id é um número aleatório entre 0 e 100
+
+        var responseDELETE = mvc.perform(delete("/alternativa/processo-possuido/"+id)).andReturn().getResponse();
+        assertThat(responseDELETE.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
     @DisplayName("Deveria retornar o código HTTP 200 ao criar uma alternativa com sucesso")
-    void testCadastrar() throws Exception {
+    void testCadastrarAlternativa() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Long id = (long) 0;
 
-        String nome = "processo_exemplo_test";
-        String descricao = "descricao_exemplo_test";
-
-        String processo_da_alternativa = "processo_exemplo_test";
         String pergunta_da_alternativa = "pergunta_exemplo";
-
-        mvc.perform(
-            post("/processo")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(processoDTOJson.write(
-                new ProcessoDTO(nome, descricao))
-            .getJson()))
-            .andReturn().getResponse();
 
         var responsePOST = mvc.perform(
                                 post("/alternativa")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(alternativaDTOJson.write(
-                                    new AlternativaDTO(pergunta_da_alternativa, processo_da_alternativa)
+                                    new AlternativaDTO(pergunta_da_alternativa)
                                 ).getJson()))
             .andReturn().getResponse();
         assertThat(responsePOST.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -85,44 +81,30 @@ public class AlternativaControllerTest {
             .andReturn().getResponse().getContentAsString();
         JsonNode jsonNode = mapper.readTree(responseGET);
         for(JsonNode alternativa : jsonNode.get("content")){
-            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa) && alternativa.get("processo").asText().equals(processo_da_alternativa)){
-                id = (long) alternativa.get("id").asInt();
+            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa)){
+                id = (long) alternativa.get("alternativa_id").asInt();
                 mvc.perform(delete("/alternativa/"+id)).andReturn().getResponse();
-                id = (long) alternativa.get("processo_id").asInt();
-                mvc.perform(delete("/processo/"+id)).andReturn().getResponse();
                 break;
             }
         }
     }
 
     @Test
-    @DisplayName("Deveria retornar o código HTTP 200 ao atualizar uma alternativa com sucesso")
-    void testAtualizar() throws Exception {
+    @DisplayName("Deveria retornar uma alternativa que fora criada")
+    void testListarAlternativaKtadmin() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
+
         Long id = (long) 0;
 
-        Boolean pergunta_foi_atualizada = false;
+        Boolean encontrou_alternativa = false;
 
-        String nome = "processo_exemplo_test";
-        String descricao = "descricao_exemplo_test";
-
-        String processo_da_alternativa = "processo_exemplo_test";
         String pergunta_da_alternativa = "pergunta_exemplo";
-        String pergunta_da_alternativa_nova = "pergunta_exemplo_nova";
-
-        mvc.perform(
-            post("/processo")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(processoDTOJson.write(
-                new ProcessoDTO(nome, descricao))
-            .getJson()))
-            .andReturn().getResponse();
 
         var responsePOST = mvc.perform(
                                 post("/alternativa")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(alternativaDTOJson.write(
-                                    new AlternativaDTO(pergunta_da_alternativa, processo_da_alternativa)
+                                    new AlternativaDTO(pergunta_da_alternativa)
                                 ).getJson()))
             .andReturn().getResponse();
 
@@ -131,12 +113,47 @@ public class AlternativaControllerTest {
             .andReturn().getResponse().getContentAsString();
         JsonNode jsonNode = mapper.readTree(responseGET);
         for(JsonNode alternativa : jsonNode.get("content")){
-            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa) && alternativa.get("processo").asText().equals(processo_da_alternativa)){
-                id = (long) alternativa.get("id").asInt();
+            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa)){
+                id = (long) alternativa.get("alternativa_id").asInt();
+                mvc.perform(delete("/alternativa/"+id)).andReturn().getResponse();
+                encontrou_alternativa = true;
+                break;
+            }
+        }
+
+        assertThat(encontrou_alternativa).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("Deveria retornar o código HTTP 200 ao atualizar uma alternativa com sucesso")
+    void testAtualizarAlternativa() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        Long id = (long) 0;
+
+        Boolean pergunta_foi_atualizada = false;
+
+        String pergunta_da_alternativa = "pergunta_exemplo";
+        String pergunta_da_alternativa_nova = "pergunta_exemplo_nova";
+
+        var responsePOST = mvc.perform(
+                                post("/alternativa")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(alternativaDTOJson.write(
+                                    new AlternativaDTO(pergunta_da_alternativa)
+                                ).getJson()))
+            .andReturn().getResponse();
+
+        String responseGET = mvc.perform(
+                                get("/alternativa"))
+            .andReturn().getResponse().getContentAsString();
+        JsonNode jsonNode = mapper.readTree(responseGET);
+        for(JsonNode alternativa : jsonNode.get("content")){
+            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa)){
+                id = (long) alternativa.get("alternativa_id").asInt();
                 var responsePUT = mvc.perform(
                                 put("/alternativa")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"id\":"+id+",\"pergunta\":\""+pergunta_da_alternativa_nova+"\",\"processo_da_alternativa\":\""+processo_da_alternativa+"\"}"))
+                                .content("{\"alternativa_id\":"+id+",\"pergunta\":\""+pergunta_da_alternativa_nova+"\"}"))
                     .andReturn().getResponse();
                 assertThat(responsePUT.getStatus()).isEqualTo(HttpStatus.OK.value());
                 break;
@@ -148,11 +165,9 @@ public class AlternativaControllerTest {
             .andReturn().getResponse().getContentAsString();
         jsonNode = mapper.readTree(responseGET);
         for(JsonNode alternativa : jsonNode.get("content")){
-            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa_nova) && alternativa.get("processo").asText().equals(processo_da_alternativa)){
-                id = (long) alternativa.get("id").asInt();
+            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa_nova)){
+                id = (long) alternativa.get("alternativa_id").asInt();
                 mvc.perform(delete("/alternativa/"+id)).andReturn().getResponse();
-                id = (long) alternativa.get("processo_id").asInt();
-                mvc.perform(delete("/processo/"+id)).andReturn().getResponse();
                 pergunta_foi_atualizada = true;
                 break;
             }
@@ -162,52 +177,18 @@ public class AlternativaControllerTest {
     }
 
     @Test
-    @DisplayName("Deveria retornar uma alternativa que fora criada")
-    void testListar() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+    @DisplayName("Deveria retornar o código HTTP 400 ao tentar criar um processo possuído sem processo_id")
+    void testCadastrarProcessoPossuido() throws Exception {
 
-        Long id = (long) 0;
+        Random rand = new Random();
 
-        Boolean encontrou_alternativa = false;
-
-        String nome = "processo_exemplo_test";
-        String descricao = "descricao_exemplo_test";
-
-        String processo_da_alternativa = "processo_exemplo_test";
-        String pergunta_da_alternativa = "pergunta_exemplo";
-
-        mvc.perform(
-            post("/processo")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(processoDTOJson.write(
-                new ProcessoDTO(nome, descricao))
-            .getJson()))
-            .andReturn().getResponse();
+        Long alternativa_id = (long) rand.nextInt(101); //id é um número aleatório entre 0 e 100
 
         var responsePOST = mvc.perform(
-                                post("/alternativa")
+                                post("/alternativa/possuir")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(alternativaDTOJson.write(
-                                    new AlternativaDTO(pergunta_da_alternativa, processo_da_alternativa)
-                                ).getJson()))
+                                .content("{\"alternativa_id\":"+alternativa_id+",\"processo_id\":\"\"}"))
             .andReturn().getResponse();
-
-        String responseGET = mvc.perform(
-                                get("/alternativa"))
-            .andReturn().getResponse().getContentAsString();
-        JsonNode jsonNode = mapper.readTree(responseGET);
-        for(JsonNode alternativa : jsonNode.get("content")){
-            if(alternativa.get("pergunta").asText().equals(pergunta_da_alternativa) && alternativa.get("processo").asText().equals(processo_da_alternativa)){
-                id = (long) alternativa.get("id").asInt();
-                mvc.perform(delete("/alternativa/"+id)).andReturn().getResponse();
-                id = (long) alternativa.get("processo_id").asInt();
-                mvc.perform(delete("/processo/"+id)).andReturn().getResponse();
-                encontrou_alternativa = true;
-                break;
-            }
-        }
-
-        assertThat(encontrou_alternativa).isEqualTo(true);
+        assertThat(responsePOST.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
-    */
 }
