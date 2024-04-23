@@ -255,7 +255,7 @@ public class ProcessoService {
             else if (i2 > r) // Right sublist exhausted
                 A.set(curr,temp.get(i1++));
                 //A[curr] = temp[i1++];
-            else if (temp.get(i1).getId()>temp.get(i2).getId()) // Get bigger
+            else if (temp.get(i1).getId()<temp.get(i2).getId()) // Get bigger
                 //else if (temp[i1]<temp[i2]) // Get smaller
                 A.set(curr,temp.get(i1++));
                 //A[curr] = temp[i1++];
