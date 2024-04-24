@@ -2,13 +2,14 @@ package com.knowledgetransfer.api.DTO;
 
 import com.knowledgetransfer.api.model.Alternativa;
 
-//tela alternativas
-public record ListagemAlternativaKtAdminDTO(
 
-        Long id,
+public record ListagemAlternativaKtadminDTO(
+
+        Long alternativa_id,
         String pergunta
 ) {
-    public ListagemAlternativaKtAdminDTO(Alternativa alternativa){
+    public ListagemAlternativaKtadminDTO(Alternativa alternativa){
+
         this( alternativa.getId(), alternativa.getPergunta());
     }
 }

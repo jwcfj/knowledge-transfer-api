@@ -17,10 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.knowledgetransfer.api.DTO.EncontrarIndicadosbyAlternativasDTOv2;
+import com.knowledgetransfer.api.DTO.EncontrarIndicadosbyAlternativasDTO;
 import com.knowledgetransfer.api.DTO.ProcessoDTO;
 import com.knowledgetransfer.api.DTO.AlternativaDTO;
-import com.knowledgetransfer.api.DTO.CheckboxAlternativaDTOv2;
+import com.knowledgetransfer.api.DTO.CheckboxAlternativaDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class ProcessoControllerTest {
     private JacksonTester<AlternativaDTO> alternativaDTOJson;
 
     @Autowired
-    private JacksonTester<EncontrarIndicadosbyAlternativasDTOv2> encontrarIndicadosDTOJson;
+    private JacksonTester<EncontrarIndicadosbyAlternativasDTO> encontrarIndicadosDTOJson;
 
     @Test
     @DisplayName("Deveria retornar o código HTTP 404 ao não encontrar um processo")
@@ -135,7 +135,7 @@ public class ProcessoControllerTest {
     @Test
     @DisplayName("Deveria retornar a distribuição das recorrências dos processos")
     void testEncontrarIndicados() throws Exception {
-        List<CheckboxAlternativaDTOv2> alternativas=new ArrayList<CheckboxAlternativaDTOv2>();
+        List<CheckboxAlternativaDTO> alternativas=new ArrayList<CheckboxAlternativaDTO>();
         ObjectMapper mapper = new ObjectMapper();
         List<Long> lista_id_processos = new ArrayList<>();
         List<Long> lista_id_alternativas = new ArrayList<>();
@@ -277,18 +277,18 @@ public class ProcessoControllerTest {
         //as 13 que apontam somente para os processos 1 e 2
 
         for(int i = 0; i < 41; i++){//41 checked
-            alternativas.add(new CheckboxAlternativaDTOv2(lista_id_alternativas.get(i), true));
+            alternativas.add(new CheckboxAlternativaDTO(lista_id_alternativas.get(i), true));
         }
 
         for(int i = 41; i < 86; i++){//45 unchecked
-            alternativas.add(new CheckboxAlternativaDTOv2(lista_id_alternativas.get(i), false));
+            alternativas.add(new CheckboxAlternativaDTO(lista_id_alternativas.get(i), false));
         }
 
         String responsePOST = mvc.perform( //realizando o POST em "/processo/indicados"
                                     post("/processo/indicados")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(encontrarIndicadosDTOJson.write(
-                                        new EncontrarIndicadosbyAlternativasDTOv2(alternativas)
+                                        new EncontrarIndicadosbyAlternativasDTO(alternativas)
                                     ).getJson()))
                                     .andReturn().getResponse().getContentAsString();
 

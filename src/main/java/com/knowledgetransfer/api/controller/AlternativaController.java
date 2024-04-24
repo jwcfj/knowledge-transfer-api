@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +20,6 @@ public class AlternativaController {
     @Autowired
     AlternativaService alternativaService;
 
-//    @PostMapping
-//    @Transactional
-//    public void cadastrar(@RequestBody @Valid AlternativaDTO alternativaDTO){
-//        alternativaService.cadastrar(alternativaDTO);
-//    }
 
     @PostMapping
     @Transactional
@@ -49,17 +43,11 @@ public class AlternativaController {
         }
     }
 
-//    @GetMapping
-//    public Page<ListagemAlternativaDTO> listar(Pageable paginacao){
-//
-//
-//        return alternativaService.listar(paginacao);
-//    }
 
     @GetMapping()
     public ResponseEntity<Object> listarAlternativaKtadmin(Pageable paginacao){
         try {
-            return ResponseEntity.ok().body(alternativaService.listarAlternativasv2(paginacao));
+            return ResponseEntity.ok().body(alternativaService.listarAlternativas(paginacao));
         }catch(Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao buscar Alternativas");
         }
@@ -74,7 +62,6 @@ public class AlternativaController {
         }
     }
 
-    //http://localhost:8080/alternativa/1/processos?size=10&page=0
     @GetMapping("/{alternativa_id}/processos")
     public ResponseEntity<Object> listarProcessosPossuidos(@PathVariable @NotNull @PositiveOrZero Long alternativa_id, Pageable paginacao){
         try {
@@ -86,7 +73,7 @@ public class AlternativaController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Object> atualizarAlternativa(@RequestBody @Valid AtualizacaoAlternativaDTOv2 dados){
+    public ResponseEntity<Object> atualizarAlternativa(@RequestBody @Valid AtualizacaoAlternativaDTO dados){
         try {
             alternativaService.atualizarAlternativa(dados);
             return ResponseEntity.ok().build();
@@ -96,15 +83,15 @@ public class AlternativaController {
     }
 
 
-//    @PutMapping("/processo-possuido")
-//    @Transactional
-//    public ResponseEntity<AtualizacaoProcessoPossuidoDTO> atualizarProcessoPossuido(@RequestBody @Valid AtualizacaoProcessoPossuidoDTO dados){
-//        try {
-//       return  ResponseEntity.ok().body(alternativaService.atualizarProcessoPossuido(dados));
-//        }catch(Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    //    @PutMapping("/processo-possuido")
+    //    @Transactional
+    //    public ResponseEntity<AtualizacaoProcessoPossuidoDTO> atualizarProcessoPossuido(@RequestBody @Valid AtualizacaoProcessoPossuidoDTO dados){
+    //        try {
+    //       return  ResponseEntity.ok().body(alternativaService.atualizarProcessoPossuido(dados));
+    //        }catch(Exception e) {
+    //            return ResponseEntity.notFound().build();
+    //        }
+    //    }
 
     @DeleteMapping("/{id}")
     @Transactional

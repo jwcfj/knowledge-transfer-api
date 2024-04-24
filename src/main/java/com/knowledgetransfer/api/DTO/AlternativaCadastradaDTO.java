@@ -6,9 +6,6 @@ public record AlternativaCadastradaDTO(
         @NotNull
         Long alternativa_id,
         @NotNull
-        String pergunta//alternativa,
-        //,
-//        @NotNull
-//        String processos
+        String pergunta
 ) {
 }

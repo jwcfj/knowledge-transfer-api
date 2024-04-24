@@ -1,19 +1,14 @@
 package com.knowledgetransfer.api.controller;
 
 import com.knowledgetransfer.api.DTO.*;
-import com.knowledgetransfer.api.model.Processo;
 import com.knowledgetransfer.api.service.ProcessoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/processo")
@@ -55,11 +50,9 @@ public class ProcessoController {
     }
 
     @PostMapping("/indicados")
-
-    //public RecorrenciaDTO encontrarIndicados(@RequestBody @Valid EncontrarIndicadosDTO indicados){
-    public ResponseEntity<Object> encontrarIndicados(@RequestBody @Valid EncontrarIndicadosbyAlternativasDTOv2 indicados){
+    public ResponseEntity<Object> encontrarIndicados(@RequestBody @Valid EncontrarIndicadosbyAlternativasDTO indicados){
         try {
-            return ResponseEntity.ok().body(processoService.encontrarIndicadosv2(indicados));
+            return ResponseEntity.ok().body(processoService.encontrarIndicados(indicados));
         }catch(Exception e) {
             return ResponseEntity.internalServerError().build();
         }

@@ -31,17 +31,6 @@ public class AlternativaService {
         Alternativa alternativa = new Alternativa();
         alternativa.setPergunta(alternativaDTO.pergunta());
         alternativaRepository.save(alternativa);
-
-//        Pattern pattern = Pattern.compile("\\d+");
-//        Matcher matcher = pattern.matcher(alternativaDTO.processos());
-//        while (matcher.find()) {
-//            Processo processo = processoRepository.getReferenceById(Long.parseLong(matcher.group()));
-//            Possui possui = new Possui();
-//            possui.setAlternativa(alternativa);
-//            possui.setProcesso(processo);
-//            possuiRepository.save(possui);
-//        }
-
     }
 
     public AlternativaCadastradaDTO cadastrarAlternativa(AlternativaDTO alternativaDTO){
@@ -54,9 +43,6 @@ public class AlternativaService {
     }
 
     public ProcessoPossuidoCadastradoDTO cadastrarProcessoPossuidov2(ProcessoPossuidoDTO processoPossuidoDTO){
-//        Alternativa alternativa = new Alternativa();
-//        alternativa.setPergunta(alternativaDTO.pergunta());
-//        alternativaRepository.save(alternativa);
 
         Alternativa alternativa = alternativaRepository.getReferenceById(processoPossuidoDTO.alternativa_id());
         Processo processo = processoRepository.getReferenceById(processoPossuidoDTO.processo_id());
@@ -67,83 +53,45 @@ public class AlternativaService {
         ProcessoPossuidoCadastradoDTO processoPossuidoCadastradoDTO = new ProcessoPossuidoCadastradoDTO(
                 processo_possuido.getProcesso().getId(),processo_possuido.getProcesso().getId(),processo_possuido.getProcesso().getNome());
         return processoPossuidoCadastradoDTO;
-//        Pattern pattern = Pattern.compile("\\d+");
-//        Matcher matcher = pattern.matcher(alternativaDTO.processos());
-//        while (matcher.find()) {
-//            Processo processo = processoRepository.getReferenceById(Long.parseLong(matcher.group()));
-//            Possui possui = new Possui();
-//            possui.setAlternativa(alternativa);
-//            possui.setProcesso(processo);
-//            possuiRepository.save(possui);
-//        }
 
     }
 
-//    public void cadastrarProcessoPossuido(AlternativaDTO alternativaDTO){
-//        Alternativa alternativa = new Alternativa();
-//        alternativa.setPergunta(alternativaDTO.pergunta());
-//        alternativaRepository.save(alternativa);
-//
-//        Pattern pattern = Pattern.compile("\\d+");
-//        Matcher matcher = pattern.matcher(alternativaDTO.processos());
-//        while (matcher.find()) {
-//            Processo processo = processoRepository.getReferenceById(Long.parseLong(matcher.group()));
-//            Possui possui = new Possui();
-//            possui.setAlternativa(alternativa);
-//            possui.setProcesso(processo);
-//            possuiRepository.save(possui);
-//        }
-//
-//    }
 
     public Page<ListagemAlternativaDTOvold> listar(Pageable paginacao){
         return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTOvold::new);
     }
 
-    //esse endpoint sera usado no client?
-    public Page<ListagemAlternativaDTO> listarAlternativas(Pageable paginacao){
-        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTO::new);
+//    public Page<ListagemAlternativaDTO> listarAlternativas(Pageable paginacao){
+//        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTO::new);
+//    }
+
+    public Page<ListagemAlternativaKtadminDTO> listarAlternativas(Pageable paginacao){
+        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaKtadminDTO::new);
     }
 
-    public Page<ListagemAlternativaDTOv2> listarAlternativasv2(Pageable paginacao){
-        return alternativaRepository.findAll(paginacao).map(ListagemAlternativaDTOv2::new);
-    }
-
-    public List<ListagemAlternativaDTOv4> listarAlternativaCliente(Pageable paginacao){
+    public List<ListagemAlternativaClientDTO> listarAlternativaCliente(Pageable paginacao){
 
         List<Long> alternativas_id = possuiRepository.findAllDistinctAlternativa();
-        //List<Alternativa> alternativas = new ArrayList<>();
 
         List<Alternativa> alternativas = alternativas_id.stream()
                 .map(alternativaRepository::getReferenceById)
                 .collect(Collectors.toList());
 
-//        for (int i = 0; i<alternativas_id.size();i++){
-//            alternativas.add(alternativaRepository.getReferenceById(alternativas_id.get(i)));
-//        }
+
         return alternativas.stream()
-                .map(ListagemAlternativaDTOv4::new)
+                .map(ListagemAlternativaClientDTO::new)
                 .collect(Collectors.toList());
 
-//        return alternativas.map(ListagemAlternativaDTOv4::new);
-//        //List<Alternativa> alternativas =  alternativaRepository.findAll();
-//       return possuiRepository.findAll(paginacao).map(ListagemAlternativaDTOv3::new);
     }
 
 
-    //esse endpoint seria usado no ktadmin
     public Page<ListagemProcessosPossuidosKtadminDTO> listarProcessosPossuidos( Long alternativa_id, Pageable paginacao){
         Page<Possui> possuiList = possuiRepository.findAllByAlternativa(alternativaRepository.getReferenceById(alternativa_id),paginacao);
         return possuiList.map(ListagemProcessosPossuidosKtadminDTO::new);
     }
 
-    public void atualizar(AtualizacaoAlternativaDTO dados) {
-        Alternativa alternativa = alternativaRepository.getReferenceById(dados.id());
-        if(dados.pergunta()!=null) alternativa.setPergunta(dados.pergunta());
-       // if(dados.processo()!=null) alternativa.setProcesso(processoRepository.findByNome(dados.processo()));
-    }
 
-    public AtualizacaoAlternativaDTOv2 atualizarAlternativa(AtualizacaoAlternativaDTOv2 dados) {
+    public AtualizacaoAlternativaDTO atualizarAlternativa(AtualizacaoAlternativaDTO dados) {
         Alternativa alternativa = alternativaRepository.getReferenceById(dados.alternativa_id());
         alternativa.setPergunta(dados.pergunta());
         return dados;
@@ -162,7 +110,6 @@ public class AlternativaService {
 
     public void deletarProcessoPossuido(Long possui_id){
         possuiRepository.deleteById(possui_id);
-        //possuiRepository.deleteByIdCustom(possui_id);
 
     }
 

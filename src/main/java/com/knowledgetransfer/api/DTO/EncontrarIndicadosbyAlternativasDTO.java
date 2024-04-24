@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record EncontrarIndicadosbyAlternativasDTOv2(
+public record EncontrarIndicadosbyAlternativasDTO(
 
         @NotNull
-        List<CheckboxAlternativaDTOv2> alternativas
+        List<CheckboxAlternativaDTO> alternativas
 ) {
 }
