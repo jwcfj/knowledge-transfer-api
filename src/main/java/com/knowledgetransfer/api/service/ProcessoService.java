@@ -30,6 +30,24 @@ public class ProcessoService {
         return processoCadastradoDTO;
     }
 
+    public ProcessoCadastradoDTO cadastrarv2(ProcessoDTOv2 dados){
+
+        String descricao =
+                "Ferramentas\n"+dados.ferramentas()
+                +"----------kt----------"
+                +"Indicadores\n"+dados.indicadores()
+                +"----------kt----------"
+                +"Métricas\n"+dados.metricas()
+                +"----------kt----------"
+                +"Stakeholders (perfil sugerido)\n"+dados.stakeholders()
+                +"----------kt----------"
+                +"Etapas\n"+dados.etapas();
+
+        Processo processo = processoRepository.save(new Processo(dados));
+        ProcessoCadastradoDTO processoCadastradoDTO = new ProcessoCadastradoDTO(processo.getId(),processo.getNome(), processo.getDescricao());
+        return processoCadastradoDTO;
+    }
+
     public void atualizar(AtualizacaoProcessoDTO dados) {
         Processo processo = processoRepository.getReferenceById(dados.id());
         if(dados.descricao()!=null) processo.setDescricao(dados.descricao());

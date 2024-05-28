@@ -17,9 +17,20 @@ public class ProcessoController {
     @Autowired
     ProcessoService processoService;
 
-    @PostMapping
+    /*@PostMapping
     @Transactional
     public  ResponseEntity<Object> cadastrar(@RequestBody @Valid ProcessoDTO dados){
+        try {
+            return ResponseEntity.ok().body(processoService.cadastrar(dados));
+        }
+        catch(Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao tentar cadastrar Processo");
+        }
+    }*/
+
+    @PostMapping
+    @Transactional
+    public  ResponseEntity<Object> cadastrarv2(@RequestBody @Valid ProcessoDTO dados){
         try {
             return ResponseEntity.ok().body(processoService.cadastrar(dados));
         }
