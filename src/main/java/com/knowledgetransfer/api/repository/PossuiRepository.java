@@ -23,6 +23,7 @@ public interface PossuiRepository extends JpaRepository<Possui,Long> {
 
 
     @Query("SELECT DISTINCT p.alternativa.id FROM Possui p")
+    // order by p.alternativa.id desc
     List<Long> findAllDistinctAlternativa();
 //    @Modifying
 //    @Transactional

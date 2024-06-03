@@ -63,7 +63,7 @@ public class AlternativaController {
     }
 
     @GetMapping("/{alternativa_id}/processos")
-    public ResponseEntity<Object> listarProcessosPossuidos(@PathVariable @NotNull @PositiveOrZero Long alternativa_id, Pageable paginacao){
+    public ResponseEntity<Object> listarProcessosPossuidos(@PathVariable @NotNull Long alternativa_id, Pageable paginacao){
         try {
             return ResponseEntity.ok().body(alternativaService.listarProcessosPossuidos(alternativa_id, paginacao));
         }catch(Exception e) {

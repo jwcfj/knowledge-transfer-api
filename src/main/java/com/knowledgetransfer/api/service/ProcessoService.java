@@ -30,7 +30,7 @@ public class ProcessoService {
         return processoCadastradoDTO;
     }
 
-    public ProcessoCadastradoDTO cadastrarv2(ProcessoDTOv2 dados){
+    /*public ProcessoCadastradoDTO cadastrarv2(ProcessoDTOv2 dados){
 
         String descricao =
                 "Ferramentas\n"+dados.ferramentas()
@@ -46,7 +46,7 @@ public class ProcessoService {
         Processo processo = processoRepository.save(new Processo(dados));
         ProcessoCadastradoDTO processoCadastradoDTO = new ProcessoCadastradoDTO(processo.getId(),processo.getNome(), processo.getDescricao());
         return processoCadastradoDTO;
-    }
+    }*/
 
     public void atualizar(AtualizacaoProcessoDTO dados) {
         Processo processo = processoRepository.getReferenceById(dados.id());
@@ -102,7 +102,11 @@ public class ProcessoService {
         Long total = 0l;
         Long processo_id_atual = -1l;
         processo_id_atual = processoRecorrentes.get(0).getId();
-        List<RecorrenciaProcessoDTO> recorrenciaProcessoDTOS = new ArrayList<RecorrenciaProcessoDTO>();
+//        List<RecorrenciaProcessoDTO> recorrenciaProcessoDTOS = new ArrayList<RecorrenciaProcessoDTO>();
+        List<RecorrenciaProcessoDTO> recorrenciaProcessoDTOSv2 = new ArrayList<RecorrenciaProcessoDTO>();
+        //
+        List<RecorrenciaProcessov2> recorrenciaProcessos = new ArrayList<RecorrenciaProcessov2>();
+        //
         int index_processo_anterior=0;
         for (int i = 0; i < processoRecorrentes.size(); i++) {
             if (processo_id_atual == processoRecorrentes.get(i).getId()) {
@@ -110,7 +114,8 @@ public class ProcessoService {
                 total++;
             }
             else{
-                recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+                recorrenciaProcessos.add(new RecorrenciaProcessov2(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+//                recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
                 processo_id_atual = processoRecorrentes.get(i).getId();
                 index_processo_anterior=i;
                 recorrencia=1l;
@@ -118,9 +123,25 @@ public class ProcessoService {
 
             }
         }
-        recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
-        RecorrenciaDTO recorrenciaDTO = new RecorrenciaDTO(total,recorrenciaProcessoDTOS);
-        return recorrenciaDTO;
+        recorrenciaProcessos.add(new RecorrenciaProcessov2(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+//        recorrenciaProcessoDTOS.add(new RecorrenciaProcessoDTO(processoRecorrentes.get(index_processo_anterior).getNome(),processoRecorrentes.get(index_processo_anterior).getDescricao(),recorrencia));
+//        RecorrenciaDTO recorrenciaDTO = new RecorrenciaDTO(total,recorrenciaProcessoDTOS);
+
+        boolean swapped;
+        for (int i = 0; i < recorrenciaProcessos.size(); i++) {
+            for (int j = 0; j < recorrenciaProcessos.size()-1; j++) {
+                if(recorrenciaProcessos.get(j).getRecorrencia() < recorrenciaProcessos.get(j+1).getRecorrencia()){
+                    RecorrenciaProcessov2 recorrenciaProcessoReceptaculo = new RecorrenciaProcessov2(recorrenciaProcessos.get(j).getNome(),recorrenciaProcessos.get(j).getDescricao(),recorrenciaProcessos.get(j).getRecorrencia());
+                    recorrenciaProcessos.set(j,recorrenciaProcessos.get(j+1));
+                    recorrenciaProcessos.set(j+1,recorrenciaProcessoReceptaculo);
+                }
+            }
+        }
+        for (int i = 0; i < recorrenciaProcessos.size(); i++) {
+            recorrenciaProcessoDTOSv2.add(new RecorrenciaProcessoDTO(recorrenciaProcessos.get(i).getNome(),recorrenciaProcessos.get(i).getDescricao(),recorrenciaProcessos.get(i).getRecorrencia()));
+        }
+        RecorrenciaDTO recorrenciaDTOv22 = new RecorrenciaDTO(total,recorrenciaProcessoDTOSv2);
+        return recorrenciaDTOv22;
 
     }
 
